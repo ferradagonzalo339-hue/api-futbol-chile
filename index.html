@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="language" content="Spanish">
+<title>FutbolChileApp — Partidos de fútbol en vivo</title>
+<link rel="shortcut icon" type="image/png" href="livescore_widget/favicon-32x32.png">
+<link rel="stylesheet" type="text/css" href="livescore_widget/main-style.css">
+<link rel="stylesheet" type="text/css" href="livescore_widget/widgetLiveScore.css">
+<script type="module" crossorigin src="https://widgets.api-sports.io/3.1.0/widgets.js"></script>
+<script src="livescore_widget/jquery.js"></script>
+<script src="livescore_widget/jqueryGlobals.js"></script>
+<script src="livescore_widget/jquery.widgetLiveScore.js"></script>
+<style>
+body{margin:0;background:#f4f6f8;font-family:Arial,Helvetica,sans-serif;color:#18212b}
+.app-header{background:#0d6efd;color:#fff;padding:18px 24px;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.app-header h1{margin:0;font-size:26px}.app-header p{margin:6px 0 0;opacity:.95}
+.container{max-width:1250px;margin:auto;padding:14px}.section{background:#fff;border-radius:12px;margin:12px 0;padding:12px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.section h2{margin:4px 0 12px;font-size:20px}.note{font-size:13px;color:#65717d;margin:0 0 12px}
+.widgetLiveScore{max-width:100%!important;width:100%!important}.tablele-container{width:100%!important}
+.manualLiveStatus{font-weight:700}.custom-live{font-weight:700}
+.notification-row{display:flex;align-items:center;justify-content:space-between;gap:14px}.notification-panel h2{margin:0 0 5px}.push-btn{border:0;border-radius:9px;padding:11px 16px;background:#0d6efd;color:#fff;font-weight:700;cursor:pointer}.push-btn:disabled{opacity:.65;cursor:default}.push-ok{color:#147a3d!important}.push-warn{color:#9a6500!important}.push-error{color:#b42318!important}
+@media(max-width:650px){.notification-row{align-items:flex-start;flex-direction:column}.push-btn{width:100%}}
+@media(max-width:650px){.app-header{padding:15px}.container{padding:7px}.section{padding:8px}.app-header h1{font-size:22px}}
+
+.tercera-wrap{margin-top:14px}.liga-bloque{border:1px solid #dfe5eb;border-radius:10px;margin:10px 0;background:#fff;overflow:hidden}.liga-titulo{background:#f1f4f7;padding:11px 13px;font-weight:700;font-size:16px}.liga-sub{padding:8px 13px;background:#fafbfc;color:#56616d;font-weight:700}.partido-row{display:grid;grid-template-columns:74px 1fr 1fr 1.3fr 110px 58px;gap:8px;padding:9px 13px;border-top:1px solid #edf0f2;align-items:center;font-size:13px}.estado{font-weight:700}.estado.vivo{color:#b42318}.estado.fin{color:#147a3d}.tabla-scroll{overflow:auto}.tabla{width:100%;border-collapse:collapse;font-size:13px}.tabla th,.tabla td{padding:7px 8px;border-bottom:1px solid #edf0f2;text-align:center;white-space:nowrap}.tabla th:nth-child(2),.tabla td:nth-child(2){text-align:left}.zona-desc{background:#fff1f1}.zona-play{background:#fff9e6}.fixture-note{padding:8px 13px;color:#66717c;font-size:12px}.llave{padding:10px 13px;border-top:1px solid #edf0f2}.llave strong{display:block;margin-bottom:5px}.chile-flag{font-size:20px;margin-right:6px}.liga-tabs{display:flex;gap:6px;flex-wrap:wrap;padding:10px 13px}.liga-tabs button{border:1px solid #cfd7df;background:#fff;border-radius:7px;padding:7px 10px;cursor:pointer;font-weight:600}.liga-tabs button.active{background:#0d6efd;color:#fff;border-color:#0d6efd}.api-sports-layout{display:grid;grid-template-columns:minmax(210px,1fr) minmax(320px,2fr) minmax(280px,1.35fr);gap:10px;align-items:start;margin-bottom:14px}.api-panel{background:#111820;border-radius:10px;overflow:hidden;min-height:180px}.api-leagues{position:sticky;top:10px;max-height:78vh;overflow:auto}.api-games{min-height:420px}.api-detail{position:sticky;top:10px;max-height:78vh;overflow:auto}.api-detail>div{margin-bottom:10px}.api-sports-layout api-sports-widget{width:100%;--primary-font-size:.82rem;--secondary-font-size:.78rem;--button-font-size:.8rem;--title-font-size:.9rem}@media(max-width:1000px){.api-sports-layout{grid-template-columns:1fr 1.6fr}.api-detail{grid-column:1/-1;position:static;max-height:none}}@media(max-width:650px){.api-sports-layout{grid-template-columns:1fr}.api-leagues,.api-detail{position:static;max-height:55vh}.api-games{min-height:350px}}
+@media(max-width:800px){.partido-row{grid-template-columns:64px 1fr 1fr;}.partido-row .estadio,.partido-row .estado{grid-column:auto}.partido-row .estadio{grid-column:2 / 4}.partido-row .estado{grid-column:auto}}
+.edit-btn,.add-btn{border:1px solid #cfd7df;background:#fff;border-radius:6px;padding:5px 7px;font-size:11px;font-weight:700;cursor:pointer}.edit-btn:hover,.add-btn:hover{background:#eef4ff}.manual-box{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center}.manual-card{width:min(460px,92vw);background:#fff;border-radius:12px;padding:18px;box-shadow:0 10px 35px rgba(0,0,0,.25)}.manual-card h3{margin:0 0 12px}.manual-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.manual-grid label{font-size:12px;font-weight:700}.manual-grid input,.manual-grid select{width:100%;box-sizing:border-box;padding:8px;border:1px solid #ccd4dc;border-radius:6px;margin-top:4px}.manual-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.manual-primary{background:#0d6efd;color:#fff;border:0;border-radius:7px;padding:8px 13px;font-weight:700}.manual-secondary{background:#fff;border:1px solid #ccd4dc;border-radius:7px;padding:8px 13px}.manual-empty{padding:12px;color:#68737d;font-size:13px}.manual-add-row{display:flex;justify-content:flex-end;padding:9px 13px;border-top:1px solid #edf0f2}.manual-score{font-weight:800}.push-note{font-size:12px;color:#68737d}@media(max-width:800px){.partido-row{grid-template-columns:64px 1fr 1fr 58px}.partido-row .estadio{grid-column:2 / 4}.partido-row .estado{grid-column:1 / 4}.partido-row .edit-btn{grid-column:4;grid-row:2}}
+</style>
+</head>
+<body>
+<header class="app-header">
+  <h1>⚽ FutbolChileApp</h1>
+  <p>Resultados, partidos en vivo y programación de fútbol</p>
+</header>
+<div class="container">
+  <section class="section" id="anfaStatus" style="margin-bottom:12px"><h2>🇨🇱 Tercera A y Tercera B</h2><p class="note" id="anfaStatusText">Conectando con los partidos de ANFA…</p></section>
+<section class="section notification-panel" id="notificationPanel">
+    <div class="notification-row">
+      <div>
+        <h2>🔔 Notificaciones</h2>
+        <p class="note" id="pushStatus">Preparando notificaciones…</p>
+      </div>
+      <button id="enablePush" class="push-btn" type="button">Activar notificaciones</button>
+    </div>
+  </section>
+  <section class="section">
+    <h2>📋 Partidos</h2>
+    <p class="note">Los encuentros están agrupados por país y división. La Tercera A y B de Chile aparece dentro del mismo listado.</p>
+    <div class="api-sports-layout">
+      <div class="api-panel api-leagues"><api-sports-widget data-type="leagues"></api-sports-widget></div>
+      <div class="api-panel api-games"><api-sports-widget data-type="games"></api-sports-widget></div>
+      <div class="api-panel api-detail">
+        <div id="game-content"><api-sports-widget data-type="game"></api-sports-widget></div>
+        <div id="standings-content"></div>
+        <div id="team-content"></div>
+      </div>
+    </div>
+    <div class="legacy-livescore" style="display:none" id="widgetLiveScore"></div>
+
+    <div class="tercera-wrap" id="terceraChile">
+      <div class="liga-bloque">
+        <div class="liga-titulo"><span class="chile-flag">🇨🇱</span>Chile — Tercera A</div>
+        <div class="fixture-note">Temporada 2026 · 14 equipos · 26 jornadas · Datos de fixture suministrados para FutbolChileApp</div>
+        <div class="liga-tabs"><button class="active" data-tab="f24">Fecha 24</button><button data-tab="f25">Fecha 25</button><button data-tab="f26">Fecha 26</button><button data-tab="tabla3a">Clasificación</button><button data-tab="playoffs">Liguilla de Ascenso</button></div>
+        <div id="contenido3a"></div>
+      </div>
+
+      <div class="liga-bloque">
+        <div class="liga-titulo"><span class="chile-flag">🇨🇱</span>Chile — Tercera B Norte</div>
+        <div class="fixture-note">Temporada 2026 · 14 equipos · fase de grupos</div>
+        <div class="liga-tabs"><button class="active" data-tab="bN25">Fecha 25</button><button data-tab="tablaBN">Clasificación</button></div>
+        <div id="contenidoBN"></div>
+      </div>
+
+      <div class="liga-bloque">
+        <div class="liga-titulo"><span class="chile-flag">🇨🇱</span>Chile — Tercera B Sur</div>
+        <div class="fixture-note">Temporada 2026 · 14 equipos · fase de grupos</div>
+        <div class="liga-tabs"><button class="active" data-tab="bS25">Fecha 25</button><button data-tab="tablaBS">Clasificación</button></div>
+        <div id="contenidoBS"></div>
+      </div>
+      <div class="liga-bloque">
+        <div class="liga-titulo"><span class="chile-flag">🇨🇱</span>Chile — ANFA</div>
+        <div class="fixture-note">Partidos manuales cuando no exista una fuente automática.</div>
+        <div id="contenidoANFA"><div class="manual-empty">No hay partidos manuales cargados.</div></div>
+        <div class="manual-add-row"><button class="add-btn" data-add-league="ANFA">+ Agregar partido</button></div>
+      </div>
+      <div class="liga-bloque">
+        <div class="liga-titulo"><span class="chile-flag">🇨🇱</span>Chile — FENAFUR</div>
+        <div class="fixture-note">Partidos manuales cuando no exista una fuente automática.</div>
+        <div id="contenidoFENAFUR"><div class="manual-empty">No hay partidos manuales cargados.</div></div>
+        <div class="manual-add-row"><button class="add-btn" data-add-league="FENAFUR">+ Agregar partido</button></div>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="manual-box" id="manualModal">
+  <div class="manual-card">
+    <h3 id="manualTitle">Editar partido</h3>
+    <div class="manual-grid">
+      <label>Competición<input id="mLiga"></label>
+      <label>Estado<select id="mEstado"><option>PROGRAMADO</option><option>EN VIVO</option><option>FINALIZADO</option></select></label>
+      <label>Local<input id="mLocal"></label>
+      <label>Visitante<input id="mVisita"></label>
+      <label>Goles local<input id="mGL" type="number" min="0" value="0"></label>
+      <label>Goles visitante<input id="mGV" type="number" min="0" value="0"></label>
+      <label>Fecha<input id="mFecha" type="date"></label>
+      <label>Hora<input id="mHora" type="time"></label>
+      <label style="grid-column:1/-1">Estadio<input id="mEstadio"></label>
+      <label style="grid-column:1/-1">Notificación al guardar<select id="mEvento"><option value="">Ninguna</option><option value="INICIO">⚽ Partido iniciado</option><option value="GOL_LOCAL">🔥 Gol del local</option><option value="GOL_VISITA">🔥 Gol del visitante</option><option value="ENTRETIEMPO">⏱️ Entretiempo</option><option value="ROJA_LOCAL">🟥 Roja al local</option><option value="ROJA_VISITA">🟥 Roja al visitante</option><option value="FINAL">🏁 Partido finalizado</option></select></label>
+    </div>
+    <p class="push-note">Si seleccionas un evento, se enviará inmediatamente como notificación push a los computadores que tengan activadas las notificaciones.</p>
+    <div class="manual-actions"><button class="manual-secondary" id="mCancel">Cancelar</button><button class="manual-primary" id="mSave">Guardar</button></div>
+  </div>
+</div>
+<script>
+$(document).ready(function(){
+  $('#widgetLiveScore').widgetLiveScore({widgetWidth:'100%',displayCalendar:true,justLiveScore:false});
+});
+
+// API-SPORTS Widgets v3: una sola configuración global para ligas, partidos y detalles.
+(function(){
+  const cfg = document.querySelector('api-sports-widget[data-type="config"]');
+  if(cfg){ cfg.setAttribute('data-key-football', ''); }
+})();
+
+// Traducción de textos de interfaz que pueda entregar dinámicamente el widget.
+(function(){
+  const mapa={
+    'Live Games':'Partidos en vivo','All Games':'Todos los partidos','Loading…':'Cargando…','Loading...':'Cargando…',
+    'Current Day':'Hoy','Today':'Hoy','Tomorrow':'Mañana','Yesterday':'Ayer','Sorry, no data!':'No hay datos.',
+    'Click for match detail!':'Ver detalles del partido','Match Summary':'Resumen del partido','Statistics':'Estadísticas',
+    'Lineups':'Alineaciones','Standings':'Clasificación','Top Scorers':'Máximos goleadores','Odds':'Cuotas',
+    'Predictions':'Pronósticos','Matches Played':'Partidos jugados','Wins':'Victorias','Draws':'Empates',
+    'Losses':'Derrotas','Goals':'Goles','Points':'Puntos','Rank':'Posición','Team':'Equipo','Player':'Jugador',
+    'Home':'Local','Away':'Visitante','Half Time':'Entretiempo','Extra Time':'Tiempo extra','Penalty':'Penal',
+    'No new data!':'No hay datos nuevos.','Close':'Cerrar','Bookmakers':'Casas de apuestas',
+    'Asian handicap':'Hándicap asiático','Over/Under':'Más/Menos','Over':'Más','Under':'Menos','Yes':'Sí','No':'No'
+  };
+  function traducir(){
+    const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+    const nodos=[]; while(walker.nextNode()) nodos.push(walker.currentNode);
+    nodos.forEach(n=>{let t=n.nodeValue; for(const [a,b] of Object.entries(mapa)) t=t.split(a).join(b); n.nodeValue=t;});
+    document.querySelectorAll('[title],[aria-label]').forEach(el=>{
+      for(const attr of ['title','aria-label']) if(el.hasAttribute(attr)){
+        let t=el.getAttribute(attr); for(const [a,b] of Object.entries(mapa)) t=t.split(a).join(b); el.setAttribute(attr,t);
+      }
+    });
+  }
+  const observer=new MutationObserver(()=>traducir());
+  observer.observe(document.body,{subtree:true,childList:true,characterData:true});
+  setTimeout(traducir,100);
+  setTimeout(traducir,700);
+  setTimeout(traducir,1800);
+})();
+
+// Notificaciones push: se activan automáticamente si el navegador ya dio permiso.
+// Si aún no existe permiso, el botón inicia el permiso requerido por el navegador.
+(async function configurarNotificaciones(){
+  const status=document.getElementById('pushStatus');
+  const button=document.getElementById('enablePush');
+  if(!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)){
+    status.textContent='Este navegador no admite notificaciones push.'; status.className='note push-error'; button.disabled=true; return;
+  }
+  try{
+    const reg=await navigator.serviceWorker.register('/sw.js');
+    async function activar(){
+      button.disabled=true;
+      status.textContent='Solicitando permiso para las notificaciones…';
+      let permission=Notification.permission;
+      if(permission==='default') permission=await Notification.requestPermission();
+      if(permission!=='granted'){
+        status.textContent=permission==='denied' ? 'Las notificaciones están bloqueadas en este navegador.' : 'No se concedió permiso para las notificaciones.';
+        status.className='note push-warn'; button.disabled=false; return;
+      }
+      const key=await (await fetch('/api/push/public-key')).text();
+      if(!key || key==='NOT_CONFIGURED') throw new Error('El servidor no tiene VAPID configurado.');
+      const existing=await reg.pushManager.getSubscription();
+      const subscription=existing || await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array(key)});
+      const response=await fetch('/api/push/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(subscription)});
+      if(!response.ok) throw new Error('No se pudo registrar la suscripción.');
+      status.textContent='Notificaciones activadas. Recibirás goles, tarjetas, penales, inicio, entretiempo y final.';
+      status.className='note push-ok'; button.textContent='✓ Notificaciones activadas';
+    }
+    function urlBase64ToUint8Array(base64String){
+      const padding='='.repeat((4-base64String.length%4)%4); const base64=(base64String+padding).replace(/-/g,'+').replace(/_/g,'/');
+      const raw=atob(base64); const output=new Uint8Array(raw.length); for(let i=0;i<raw.length;i++) output[i]=raw.charCodeAt(i); return output;
+    }
+    button.addEventListener('click',activar);
+    if(Notification.permission==='granted') await activar();
+    else if(Notification.permission==='denied') { status.textContent='Las notificaciones están bloqueadas. Debes permitirlas en la configuración del navegador.'; status.className='note push-warn'; }
+    else { status.textContent='Pulsa “Activar notificaciones” para recibir avisos de los partidos.'; }
+  }catch(e){ console.error(e); status.textContent='No se pudieron preparar las notificaciones: '+e.message; status.className='note push-error'; button.disabled=false; }
+})();
+
+</script>
+
+<script>
+(function(){
+const A={
+ AGU:'Aguará FC',AOR:'Atlético Oriente',CCA:'Comunal Cabrero',CHI:'Chimbarongo FC',CON:'Constitución Unido',DRA:'Deportes Rancagua',FUT:'Futuro FC',IUN:'Imperial Unido',LBU:'Lautaro de Buin',MUN:'Malleco Unido',MPA:'Municipal Puente Alto',NAV:'Naval de Talcahuano',QUN:'Quintero Unido',RRO:'Rodelindo Román',
+ APA:'Audax Paipote',CEF:'CEFF Copiapó',COV:'CSD Ovalle',CMA:'Cultural Maipú',CUR:'Curacaví FC',DOV:'Deportes Ovalle',DVA:'Deportes Vallenar',JED:'Jardín del Edén',JCO:'Julio Covarrubias',MME:'Municipal Mejillones',MOV:'Municipal Ovalle',PTA:'Provincial Talagante',TPA:'Tricolor de Paine',UCO:'Unión Compañías',
+ AVI:'Arturo Fernández Vial',BAI:'Buenos Aires de Parral',IBE:'CDSC Iberia',NAC:'CDSC Nacimiento',DHU:'Deportes Hualpén',DLA:'Deportivo Laja Histórico',DPU:'Deportivo Pumanque',EFC:'EFC Conchalí',GAS:'Gasparín FC',ICO:'Inter Concepción',MPA2:'Municipal Paillaco',RIH:'República Independiente de Hualqui',VPR:'Vicente Pérez Rosales'
+};
+const tabla3a=[['Malleco Unido',23,14,47,'Campeón / Ascendido'],['Lautaro de Buin',23,10,46,'Play-Offs Ascenso'],['Quintero Unido',23,23,45,'Permanencia'],['Deportes Rancagua',23,10,38,'Permanencia'],['Naval de Talcahuano',23,5,38,'Permanencia'],['Comunal Cabrero',23,11,37,'Permanencia'],['Aguará FC',23,9,36,'Permanencia'],['Constitución Unido',24,1,31,'Permanencia'],['Atlético Oriente',23,-5,29,'Permanencia'],['Rodelindo Román',23,-19,24,'Permanencia'],['Chimbarongo FC',23,-8,23,'Promoción'],['Municipal Puente Alto',24,-18,23,'Permanencia'],['Imperial Unido',23,-19,18,'Descenso Directo'],['Futuro FC',23,-14,16,'Descenso Directo']];
+const tablaBN=[['Provincial Talagante',24,30,54,'Fase Regular'],['Municipal Mejillones',24,28,48,'Fase Regular'],['Deportes Vallenar',24,18,43,'Fase Regular'],['Cultural Maipú',24,12,42,'Fase Regular'],['Audax Paipote',24,22,38,'Fase Regular'],['Deportes Ovalle',24,12,36,'Fase Regular'],['Unión Glorias Navales',24,1,34,'Fase Regular'],['CEFF Copiapó',24,7,33,'Fase Regular'],['Julio Covarrubias',24,-8,30,'Fase Regular'],['Jardín del Edén',24,-17,28,'Fase Regular'],['CSD Ovalle',24,-4,27,'Fase Regular'],['Curacaví FC',24,-13,27,'Fase Regular'],['Tricolor de Paine',24,-18,18,'Descendido'],['Unión Compañías',24,-70,7,'Descendido']];
+const tablaBS=[['Buenos Aires de Parral',25,48,65,'Fase Regular'],['Laja Histórico',24,40,55,'Fase Regular'],['CDSC Iberia',24,10,44,'Fase Regular'],['Arturo Fernández Vial',24,26,44,'Fase Regular'],['Deportes Valdivia',24,22,43,'Fase Regular'],['Inter Concepción',24,31,41,'Fase Regular'],['Vicente Pérez Rosales',24,21,39,'Fase Regular'],['Gasparín FC',24,13,30,'Fase Regular'],['Municipal Paillaco',25,2,28,'Fase Regular'],['República Ind. de Hualqui',24,-13,25,'Fase Regular'],['CDSC Nacimiento',24,-9,24,'Fase Regular'],['Deportivo Pumanque',24,-22,22,'Fase Regular'],['EFC Conchalí',24,-40,19,'Descendido'],['Deportes Hualpén',24,-129,1,'Descendido']];
+const f3a={f24:[['Viernes 19:00','Municipal Puente Alto','Quintero Unido','Municipal de Puente Alto','PROGRAMADO'],['Viernes 19:30','Constitución Unido','Lautaro de Buin','Enrique Donn Müller','PROGRAMADO'],['Sábado 12:00','Deportes Rancagua','Rodelindo Román','Patricio Mekis Cancha 1','FINALIZADO'],['Sábado 12:00','Chimbarongo FC','Malleco Unido','Municipal de Chimbarongo','FINALIZADO'],['Domingo 13:30','Aguará FC','Atlético Oriente','Municipal de Peñalolén','PROGRAMADO'],['Domingo 16:00','Naval de Talcahuano','Imperial Unido','El Morro de Talcahuano','PROGRAMADO'],['Domingo 18:00','Futuro FC','Comunal Cabrero','Municipal de Peñalolén','PROGRAMADO']],f25:[['','Rodelindo Román','Municipal Puente Alto','La Montura','PROGRAMADO'],['','Quintero Unido','Constitución Unido','Raúl Vargas Verdejo','PROGRAMADO'],['','Lautaro de Buin','Chimbarongo FC','Lautaro de Buin','PROGRAMADO'],['','Malleco Unido','Futuro FC','Alberto Larraguibel','PROGRAMADO'],['','Comunal Cabrero','Naval de Talcahuano','Municipal de Cabrero','PROGRAMADO'],['','Imperial Unido','Aguará FC','Municipal de Nueva Imperial','PROGRAMADO'],['','Atlético Oriente','Deportes Rancagua','Parque de Lo Barnechea','PROGRAMADO']],f26:[['','Municipal Puente Alto','Constitución Unido','Municipal de Puente Alto','PROGRAMADO'],['','Chimbarongo FC','Quintero Unido','Municipal de Chimbarongo','PROGRAMADO'],['','Futuro FC','Lautaro de Buin','Cancha Peñalolén','PROGRAMADO'],['','Naval de Talcahuano','Malleco Unido','El Morro','PROGRAMADO'],['','Aguará FC','Comunal Cabrero','Municipal de Peñalolén','PROGRAMADO'],['','Deportes Rancagua','Imperial Unido','Patricio Mekis','PROGRAMADO'],['','Rodelindo Román','Atlético Oriente','La Montura','PROGRAMADO']]};
+const bN25=[['','Tricolor de Paine','Municipal Ovalle','Municipal de Paine','FINALIZADO'],['','Municipal Ovalle','Deportes Vallenar','Diaguitas','PROGRAMADO'],['','Municipal Mejillones','Audax Paipote','Municipal de Mejillones','PROGRAMADO']];
+const bS25=[['16:30','Gasparín FC','CDSC Iberia','Lo Blanco','EN VIVO'],['16:30','Deportes Valdivia','Vicente Pérez Rosales','Félix Gallardo','EN VIVO'],['16:30','República Independiente de Hualqui','Arturo Fernández Vial','Ester Roa Rebolledo','EN VIVO'],['17:00','CDSC Nacimiento','EFC Conchalí','Municipal de Nacimiento','EN VIVO'],['18:00','Deportivo Pumanque','Inter Concepción','Municipal de Pumanque','EN VIVO']];
+const manualById=new Map();
+function matchId(liga,x){return 'fixture-'+liga+'-'+[x[1],x[2],x[0],x[3]].join('|').replace(/[^a-zA-Z0-9|áéíóúÁÉÍÓÚñÑ_-]/g,'_')}
+function partidos(rows,liga){return '<div>'+rows.map(x=>{const id=matchId(liga,x),m=manualById.get(id)||{}; const gl=m.goles_local??x[5]??'',gv=m.goles_visita??x[6]??''; const est=m.estado||x[4]; return `<div class="partido-row" data-id="${id}"><div><b>${x[0]||'—'}</b></div><div>${x[1]}</div><div>${x[2]} <span class="manual-score">${(gl!==''||gv!=='')?`(${gl}-${gv})`:''}</span></div><div class="estadio">${x[3]}</div><div class="estado ${est=='EN VIVO'?'vivo':est=='FINALIZADO'?'fin':''}">${est}</div><button class="edit-btn" data-edit-id="${id}" data-liga="${liga}" data-time="${x[0]||''}" data-local="${x[1]}" data-visita="${x[2]}" data-estadio="${x[3]}">Editar</button></div>`}).join('')+'</div>'} 
+function renderManualLeague(liga,container){const rows=manualMatches.filter(m=>m.liga===liga);document.getElementById(container).innerHTML=rows.length?'<div>'+rows.map(m=>`<div class="partido-row"><div><b>${m.hora||'—'}</b></div><div>${m.local}</div><div>${m.visita} <span class="manual-score">(${m.goles_local}-${m.goles_visita})</span></div><div class="estadio">${m.estadio||'—'}</div><div class="estado ${m.estado=='EN VIVO'?'vivo':m.estado=='FINALIZADO'?'fin':''}">${m.estado}</div><button class="edit-btn" data-edit-id="${m.id}">Editar</button></div>`).join('')+'</div>':'<div class="manual-empty">No hay partidos manuales cargados.</div>'}
+function tabla(rows){return '<div class="tabla-scroll"><table class="tabla"><thead><tr><th>Pos.</th><th>Equipo</th><th>PJ</th><th>DG</th><th>Pts.</th><th>Condición</th></tr></thead><tbody>'+rows.map((x,i)=>`<tr class="${x[4].includes('Descenso')?'zona-desc':x[4].includes('Ascenso')||x[4]=='Promoción'?'zona-play':''}"><td>${i+1}</td><td>${x[0]}</td><td>${x[1]}</td><td>${x[2]}</td><td><b>${x[3]}</b></td><td>${x[4]}</td></tr>`).join('')+'</tbody></table></div>'}
+function playoffs(){return `<div class="llave"><strong>Semifinal A — Ida y vuelta</strong>NAV — Lautaro de Buin · Ida: El Morro (Talcahuano) · Vuelta: Municipal de Buin</div><div class="llave"><strong>Semifinal B — Ida y vuelta</strong>Deportes Rancagua — Quintero Unido · Ida: Patricio Mekis (Rancagua) · Vuelta: Raúl Vargas Verdejo (Quintero)</div><div class="llave"><strong>Final única por el ascenso</strong>Ganador Semifinal A vs Ganador Semifinal B · Estadio Fiscal de Talca · Ascenso a Segunda División Profesional 2027</div>`}
+function render3a(tab){document.getElementById('contenido3a').innerHTML=tab==='tabla3a'?tabla(tabla3a):tab==='playoffs'?playoffs():partidos(f3a[tab]||f3a.f24,'Tercera A')}
+function renderBN(tab){document.getElementById('contenidoBN').innerHTML=tab==='tablaBN'?tabla(tablaBN):partidos(bN25,'Tercera B Norte')}
+function renderBS(tab){document.getElementById('contenidoBS').innerHTML=tab==='tablaBS'?tabla(tablaBS):partidos(bS25,'Tercera B Sur')}
+
+function tabla(rows){return '<div class="tabla-scroll"><table class="tabla"><thead><tr><th>Pos.</th><th>Equipo</th><th>PJ</th><th>DG</th><th>Pts.</th><th>Condición</th></tr></thead><tbody>'+rows.map((x,i)=>`<tr class="${x[4].includes('Descenso')?'zona-desc':x[4].includes('Ascenso')||x[4]=='Promoción'?'zona-play':''}"><td>${i+1}</td><td>${x[0]}</td><td>${x[1]}</td><td>${x[2]}</td><td><b>${x[3]}</b></td><td>${x[4]}</td></tr>`).join('')+'</tbody></table></div>'}
+function playoffs(){return `<div class="llave"><strong>Semifinal A — Ida y vuelta</strong>NAV — Lautaro de Buin · Ida: El Morro (Talcahuano) · Vuelta: Municipal de Buin</div><div class="llave"><strong>Semifinal B — Ida y vuelta</strong>Deportes Rancagua — Quintero Unido · Ida: Patricio Mekis (Rancagua) · Vuelta: Raúl Vargas Verdejo (Quintero)</div><div class="llave"><strong>Final única por el ascenso</strong>Ganador Semifinal A vs Ganador Semifinal B · Estadio Fiscal de Talca · Ascenso a Segunda División Profesional 2027</div>`}
+function render3a(tab){document.getElementById('contenido3a').innerHTML=tab==='tabla3a'?tabla(tabla3a):tab==='playoffs'?playoffs():partidos(f3a[tab]||f3a.f24)}
+function renderBN(tab){document.getElementById('contenidoBN').innerHTML=tab==='tablaBN'?tabla(tablaBN):partidos(bN25)}
+function renderBS(tab){document.getElementById('contenidoBS').innerHTML=tab==='tablaBS'?tabla(tablaBS):partidos(bS25)}
+let manualMatches=[];
+async function cargarManuales(){try{const r=await fetch('/api/manual/matches');const d=await r.json();manualMatches=d.matches||[];manualMatches.forEach(m=>manualById.set(String(m.id),m));render3a('f24');renderBN('bN25');renderBS('bS25');renderManualLeague('ANFA','contenidoANFA');renderManualLeague('FENAFUR','contenidoFENAFUR');}catch(e){console.warn(e);render3a('f24');renderBN('bN25');renderBS('bS25');}}
+cargarManuales();
+document.querySelectorAll('#terceraChile .liga-tabs button').forEach(btn=>btn.addEventListener('click',()=>{btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const t=btn.dataset.tab;if(['f24','f25','f26','tabla3a','playoffs'].includes(t))render3a(t);else if(['bN25','tablaBN'].includes(t))renderBN(t);else renderBS(t)}));
+})();
+const modal=document.getElementById('manualModal'); let editing=null;
+function abrirEditor(data,liga){editing=data; document.getElementById('manualTitle').textContent=data.id?'Editar partido':'Agregar partido'; document.getElementById('mLiga').value=liga||data.liga||'ANFA'; document.getElementById('mEstado').value=data.estado||'PROGRAMADO'; document.getElementById('mLocal').value=data.local||''; document.getElementById('mVisita').value=data.visita||''; document.getElementById('mGL').value=data.goles_local??0; document.getElementById('mGV').value=data.goles_visita??0; document.getElementById('mFecha').value=data.fecha||''; document.getElementById('mHora').value=data.hora||''; document.getElementById('mEstadio').value=data.estadio||''; document.getElementById('mEvento').value=''; modal.style.display='flex';}
+function cerrarEditor(){modal.style.display='none';editing=null}
+document.getElementById('mCancel').onclick=cerrarEditor;
+document.querySelectorAll('[data-add-league]').forEach(b=>b.onclick=()=>abrirEditor({},b.dataset.addLeague));
+document.addEventListener('click',e=>{const b=e.target.closest('[data-edit-id]');if(!b)return; const id=b.dataset.editId; const existing=manualMatches.find(m=>String(m.id)===id); if(existing){abrirEditor(existing,existing.liga);return;} abrirEditor({id,local:b.dataset.local,visita:b.dataset.visita,estadio:b.dataset.estadio,hora:b.dataset.time,liga:b.dataset.liga,estado:'PROGRAMADO'},b.dataset.liga);});
+document.getElementById('mSave').onclick=async()=>{const data={id:editing?.id||undefined,liga:document.getElementById('mLiga').value,estado:document.getElementById('mEstado').value,local:document.getElementById('mLocal').value.trim(),visita:document.getElementById('mVisita').value.trim(),goles_local:Number(document.getElementById('mGL').value||0),goles_visita:Number(document.getElementById('mGV').value||0),fecha:document.getElementById('mFecha').value,hora:document.getElementById('mHora').value,estadio:document.getElementById('mEstadio').value.trim(),event:document.getElementById('mEvento').value}; if(!data.local||!data.visita){alert('Indica el equipo local y visitante.');return;} const r=await fetch('/api/manual/matches',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}); const out=await r.json(); if(!r.ok||!out.ok){alert(out.error||'No se pudo guardar');return;} const i=manualMatches.findIndex(m=>String(m.id)===String(out.match.id));if(i>=0)manualMatches[i]=out.match;else manualMatches.push(out.match);manualById.set(String(out.match.id),out.match);render3a('f24');renderBN('bN25');renderBS('bS25');renderManualLeague('ANFA','contenidoANFA');renderManualLeague('FENAFUR','contenidoFENAFUR');cerrarEditor();};
+fetch('/api/anfa/status').then(r=>r.json()).then(d=>{document.getElementById('anfaStatusText').textContent=`ANFA conectado · ${d.matches.length} partidos en seguimiento`;}).catch(()=>{document.getElementById('anfaStatusText').textContent='ANFA sin conexión en este momento.'});
+</script>
+
+<!-- Configuración oficial API-SPORTS Widgets v3 -->
+<api-sports-widget data-type="config"
+  data-key=""
+  data-url-football="/api/football/widget/"
+  data-logo-url="https://media.api-sports.io"
+  data-sport="football"
+  data-lang="es"
+  data-theme="dark"
+  data-show-errors="true"
+  data-show-logos="true"
+  data-refresh="20"
+  data-favorite="true"
+  data-standings="true"
+  data-team-squad="true"
+  data-team-statistics="true"
+  data-player-statistics="true"
+  data-tab="games"
+  data-game-tab="statistics"
+  data-target-player="modal"
+  data-target-league=".api-games"
+  data-target-team="#team-content"
+  data-target-game="#game-content"
+  data-target-standings="#standings-content">
+</api-sports-widget>
+</body>
+</html>
